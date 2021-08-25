@@ -1,0 +1,60 @@
+Economy:
+  Database:
+    # Type of database used, MySQL, SQLite and others will be added soon.
+    # Available types: H2
+    type: H2
+    # You can change this value to 0 if you want to make server more difficult
+    defaultMoney: 1000
+    # You can remove it if you want, and you can use it in messages using: "%currency%"
+    currency: '$'
+
+  # Not used for now
+  TransactionUtils:
+    # %money_giver_name%, %money_amount%
+    getMoneyMessage: "%money_giver_name% gave you %money_amount%%currency%!"
+    notEnoughMoney: "&cYou don't have enough money!"
+    receiverDoesntExists: "&cReceiver doesn't exists!"
+
+  MoneyExecutor:
+    # %money_target_name%, %money_target_amount%
+    dontHavePermission: "&cYou don't have permission to use this command!"
+    moneyMessage: "&f&l%money_target_name% &7has &f&l%money_target_amount%%currency%&7!"
+    yourselfMoneyMessage: "&7You have &f&l%money_target_amount%%currency%&7!"
+    lastArgumentNotNumber: "&cLast argument isn't a valid number!"
+    successfulAction: "&7That action was successful done!"
+    badUsage: "&7Use: &f&l/money [PLAYER] [ACTION] [AMOUNT]!"
+    targetDontExists: "&cTarget doesn't exists!"
+
+  PayExecutor:
+    dontHavePermission: "&cYou don't have permission to use this command."
+    badUsage: "&7Use: &f&l/pay {PLAYER} {AMOUNT}!"
+    cantPayYourself: "&cYou can't pay to yourself!"
+    lastArgumentNotNumber: "&cLast argument isn't a valid number!"
+    dontHaveEnoughMoney: "&cYou don't have enough money!"
+    notAvailableToConsole: "&fThis command is unavailable to a Console."
+    targetDoesntExists: "&cTarget doesn't exists!"
+    receivedMoney: "&f&l%money_sender_name% &7send you &f&l%money_sent_amount%%currency%&7!"
+    gaveMoney: "&7You have send &f&l%money_receiver_name% %money_sent_amount%%currency%&7!"
+
+Reload:
+  dontHavePermission: "&cYou don't have permission to use this command."
+  successAction: "&7OpEconomy reloaded!"
+
+Redeem:
+  # Too small code can be easy to guess (Best: 12, Minimum: 1, Recommended: 8 or 6)
+  codeLength: 8
+  # If this is enabled, it will remove additional code if it's too big or add to fill length requirement
+  # Preferred to be enabled (true)
+  removeAdditional: true
+  dontHavePermission: "&cYou don't have permission to use this command."
+  notAvailableToConsole: "&fThis command is unavailable to a Console."
+  validCodeEntered: "&7Your entered code is valid! Reward: &f&l%redeem_reward%&7!"
+  notValidCodeEntered: "&7Your entered code is invalid / expired."
+  lastArgumentNotNumber: "&cLast argument isn't a valid number!"
+  createdCode: "&7Created code: &f&l%redeem_code_name%&7!"
+  badUsage: "&7Use: &f&l/redeem &f&l{CODE / CREATE / REMOVE / INFO} [- / (Random or Code) / Code] [(Only Create) Max Uses] [(Only Create) Reward]!"
+  removedCode: "&7Code has been removed."
+  infoMessage: "&7Code: &f&l%redeem_code_name% \n&7Reward: &f&l%redeem_reward% \n&7Max Uses: &f&l%redeem_maxUses% \n&7Uses: &f&l%redeem_uses% \n&7Players: &f&l%redeem_players_name%"
+
+#Don't change this value unless YOU KNOW WHAT YOU ARE DOING
+version: 0.1

@@ -1,0 +1,15 @@
+name: OpEconomy
+version: '${project.version}'
+main: me.opkarol.opeconomy.Economy
+api-version: 1.17
+load: STARTUP
+
+commands:
+  money:
+    description: To check money of yourself, others or manage other's bank accounts
+  pay:
+    description: You can pay others players you hard worked money
+  opreload:
+    description: Reload OpEconomy Plugin using this command
+  redeem:
+    description: Redeem codes that are created removed and checked by this command too
