@@ -23,10 +23,10 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission("opeconomy.command.use") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
+        if (!sender.hasPermission("opeconomy.money.command.use") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
 
         if (args.length == 0 && sender instanceof Player){
-            if (!sender.hasPermission("opeconomy.command.check") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
+            if (!sender.hasPermission("opeconomy.money.command.check") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
             return returnMessageToSender(sender,getYourselfMoneyMessage(sender));
         } else if (args.length == 0) return false;
 
@@ -37,7 +37,7 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
         } else uuid = target.getUniqueId();
 
         if (args.length == 1){
-            if (!sender.hasPermission("opeconomy.command.check.others") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
+            if (!sender.hasPermission("opeconomy.money.command.check.others") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
 
             if (target == sender) sender.sendMessage(getYourselfMoneyMessage(sender));
             else if (isPlayerAccountExists(uuid)) sender.sendMessage(getMoneyMessage(args[0], getMoneyFromUUID(uuid)));
@@ -47,7 +47,7 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
         }
 
         if (args.length == 3){
-            if (!sender.hasPermission("opeconomy.command.manage") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
+            if (!sender.hasPermission("opeconomy.money.command.manage") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
             // /command <player> (set/remove/add) (amount)
             String amountString = replaceDigits(args[2]);
             if(isntValidInteger(amountString)) return returnMessageToSender(sender, lastArgumentNotNumber);
