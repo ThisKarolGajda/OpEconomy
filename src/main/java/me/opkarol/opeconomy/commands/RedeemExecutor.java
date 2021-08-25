@@ -58,14 +58,14 @@ public class RedeemExecutor extends Database implements CommandExecutor {
 
             String maxUsesString2 = replaceDigits(maxUsesString);
 
-            if (!isValidInteger(maxUsesString2)) return returnMessageToSender(sender, lastArgumentNotNumber);
+            if (isntValidInteger(maxUsesString2)) return returnMessageToSender(sender, lastArgumentNotNumber);
 
             int maxUsesAmount;
             try { maxUsesAmount = Integer.parseInt(maxUsesString2);} catch (NumberFormatException e) {return returnMessageToSender(sender, lastArgumentNotNumber);}
 
             String rewardString2 = replaceDigits(rewardString);
 
-            if (!isValidInteger(rewardString2)) return returnMessageToSender(sender, lastArgumentNotNumber);
+            if (isntValidInteger(rewardString2)) return returnMessageToSender(sender, lastArgumentNotNumber);
 
             int rewardAmount;
             try { rewardAmount = Integer.parseInt(rewardString2);} catch (NumberFormatException e) {return returnMessageToSender(sender, lastArgumentNotNumber);}

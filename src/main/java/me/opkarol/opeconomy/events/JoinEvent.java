@@ -11,8 +11,6 @@ public class JoinEvent extends TransactionUtils implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerJoin(@NotNull PlayerJoinEvent event) {
-        if (!isPlayerAccountExists(event.getPlayer().getUniqueId())){
-            createNewBankAccount(event.getPlayer().getUniqueId());
-        }
+        if (!isPlayerAccountExists(event.getPlayer().getUniqueId())) createNewBankAccount(event.getPlayer().getUniqueId());
     }
 }

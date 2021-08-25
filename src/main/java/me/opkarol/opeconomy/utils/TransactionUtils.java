@@ -4,6 +4,7 @@ import me.opkarol.opeconomy.economy.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.UUID;
 
@@ -25,7 +26,8 @@ public class TransactionUtils extends Database {
     public static void setReceiverDoesntExists(String receiverDoesntExists) {
         TransactionUtils.receiverDoesntExists = receiverDoesntExists;
     }
-
+    /*
+    @TestOnly
     public static boolean payPlayerMoney(Object giver, Object receiver, int amount){
         Player giverPlayer = null;
         Player receiverPlayer = null;
@@ -50,8 +52,8 @@ public class TransactionUtils extends Database {
             return false;
         } else if (isntPlayerNull(giverPlayer)) giverPlayer.sendMessage(notEnoughMoney);
         return false;
-
     }
+     */
 
     public static @NotNull String getSendMessage(String playerGiverName, int amount){
         return getMoneyMessage.replace("%money_giver_name%", playerGiverName).replace("%money_amount%", String.valueOf(amount));

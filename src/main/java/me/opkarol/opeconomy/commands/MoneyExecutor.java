@@ -27,10 +27,8 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
 
         if (args.length == 0 && sender instanceof Player){
             if (!sender.hasPermission("opeconomy.command.check") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
-            sender.sendMessage(getYourselfMoneyMessage(sender));
-            return true;
+            return returnMessageToSender(sender,getYourselfMoneyMessage(sender));
         } else if (args.length == 0) return false;
-
 
         Player target = Bukkit.getPlayer(args[0]);
         UUID uuid;
@@ -52,7 +50,7 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
             if (!sender.hasPermission("opeconomy.command.manage") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
             // /command <player> (set/remove/add) (amount)
             String amountString = replaceDigits(args[2]);
-            if(!isValidInteger(amountString)) return returnMessageToSender(sender, lastArgumentNotNumber);
+            if(isntValidInteger(amountString)) return returnMessageToSender(sender, lastArgumentNotNumber);
 
             int amount;
             try {amount = Integer.parseInt(amountString);} catch (NumberFormatException e) { return returnMessageToSender(sender, lastArgumentNotNumber); }

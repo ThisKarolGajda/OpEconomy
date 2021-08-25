@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CodeGenerator {
     public enum Mode {
-        ALPHA, NUMERIC, ALPHANUMERIC;
+        ALPHA, NUMERIC, ALPHANUMERIC
     }
 
     public static @NotNull String getString(int length, @NotNull Mode mode) {

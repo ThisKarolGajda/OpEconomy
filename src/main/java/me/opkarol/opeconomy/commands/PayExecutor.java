@@ -39,7 +39,7 @@ public class PayExecutor extends TransactionUtils implements CommandExecutor {
 
             String amountString = replaceDigits(args[1]);
 
-            if(!isValidInteger(amountString)) return returnMessageToSender(sender, lastArgumentNotNumber);
+            if(isntValidInteger(amountString)) return returnMessageToSender(sender, lastArgumentNotNumber);
 
             int amount;
             try {amount = Integer.parseInt(amountString);} catch (NumberFormatException e) { return returnMessageToSender(sender, lastArgumentNotNumber); }

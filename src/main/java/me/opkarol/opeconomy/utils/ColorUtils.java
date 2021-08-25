@@ -2,6 +2,7 @@ package me.opkarol.opeconomy.utils;
 
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ColorUtils {
         return ChatColor.translateAlternateColorCodes('&', toFormat);
     }
 
-    @NotNull
+    @NotNull @TestOnly
     public static List<String> formatList(@NotNull List<String> lore) {
         List<String> Lore = new ArrayList<>();
         for (String line : lore) Lore.add(formatText(line));

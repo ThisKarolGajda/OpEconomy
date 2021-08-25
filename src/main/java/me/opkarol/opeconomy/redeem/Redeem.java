@@ -12,13 +12,6 @@ public class Redeem implements Serializable {
     private final int reward;
     private List<Player> used;
 
-    public Redeem(int maxUses2, int uses2, int reward2, List<Player> used2){
-        maxUses = maxUses2;
-        uses = uses2;
-        reward = reward2;
-        used = used2;
-    }
-
     public Redeem(int maxUses2, int uses2, int reward2){
         maxUses = maxUses2;
         uses = uses2;

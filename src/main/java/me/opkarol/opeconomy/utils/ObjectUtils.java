@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class ObjectUtils {
-    public static enum HoverType{
-        Copy, RunCommand;
+    public enum HoverType{
+        Copy, RunCommand
     }
 
     public static @NotNull UUID getUUIDFromObject(Object object){
@@ -39,10 +39,6 @@ public class ObjectUtils {
         return uuid;
     }
 
-    static void setHoverEvent(@NotNull TextComponent textComponent, String message){
-        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(message).create()));
-    }
-
     static String getStringFromEnumType(HoverType type){
         String toReturn;
         switch (type){
@@ -57,9 +53,6 @@ public class ObjectUtils {
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(getStringFromEnumType(type)).create()));
     }
 
-    static void setRunCommandClickEvent(@NotNull TextComponent textComponent, String command){
-        textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-    }
     static void setCopyClickEvent(TextComponent textComponent, String toCopy){
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, toCopy));
     }

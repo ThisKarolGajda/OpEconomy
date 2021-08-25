@@ -17,47 +17,17 @@ public class Database {
 
     private static HashMap<UUID, Integer> moneyMap = new HashMap<>();
 
-    public static void addPlayerToMap(Object player, int money) {
-        UUID uuid = getUUIDFromObject(player);
-        moneyMap.put(uuid, money);
-    }
-
     public static void createNewBankAccount(Object player){
         UUID uuid = getUUIDFromObject(player);
         moneyMap.put(uuid, defaultMoney);
-    }
-
-    public static void changeMoneyOfPlayer(Object player, int money) {
-        UUID uuid = getUUIDFromObject(player);
-        moneyMap.replace(uuid, money);
     }
 
     public static void changeMoneyOfPlayer(UUID uuid, int money){
         moneyMap.replace(uuid, money);
     }
 
-    public static boolean isPlayerAccountExists(Object player){
-        UUID uuid = getUUIDFromObject(player);
-        return moneyMap.containsKey(uuid);
-    }
-
     public static boolean isPlayerAccountExists(UUID uuid){
         return moneyMap.containsKey(uuid);
-    }
-
-    public static void removePlayerFromMap(Object player){
-        UUID uuid = getUUIDFromObject(player);
-        moneyMap.remove(uuid);
-    }
-
-    public static void removePlayerMoney(Object player, int amount){
-        UUID uuid = getUUIDFromObject(player);
-        moneyMap.replace(uuid, getMoneyFromPlayer(uuid) - amount);
-    }
-
-    public static void addPlayerMoney(Object player, int amount){
-        UUID uuid = getUUIDFromObject(player);
-        moneyMap.replace(uuid, getMoneyFromPlayer(uuid) + amount);
     }
 
     public static void removePlayerMoney(UUID uuid, int amount){

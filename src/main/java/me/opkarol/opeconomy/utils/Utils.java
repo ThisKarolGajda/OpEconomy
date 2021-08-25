@@ -1,24 +1,17 @@
 package me.opkarol.opeconomy.utils;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.TestOnly;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 
 public class Utils {
 
-    @TestOnly
-    public static void sendWarningConsoleMessage(String message){
-        Bukkit.getLogger().warning(message);
-    }
-
-    public static boolean isValidInteger(String string){
-        return isNumeric(string);
+    public static boolean isntValidInteger(String string){
+        return !isNumeric(string);
     }
 
     @Contract(pure = true)

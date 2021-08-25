@@ -45,10 +45,12 @@ public class Database extends me.opkarol.opeconomy.economy.Database {
         if (uses >= redeem.getMaxUses()) return false;
         else {
             redeem.setUses(uses + 1);
+
             List<Player> playerList = redeem.getUsed();
             if (playerList == null) playerList = new ArrayList<>();
             playerList.add(player);
             redeem.setUsed(playerList);
+
             addPlayerMoney(ObjectUtils.getUUIDFromObject(player), redeem.getReward());
             return true;
         }
