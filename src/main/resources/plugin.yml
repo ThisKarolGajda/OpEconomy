@@ -13,3 +13,8 @@ commands:
     description: Reload OpEconomy Plugin using this command
   redeem:
     description: Redeem codes that are created removed and checked by this command too
+  balancetop:
+    aliases:
+      - baltop
+      - moneytop
+    description: Check leaderboard of all players money

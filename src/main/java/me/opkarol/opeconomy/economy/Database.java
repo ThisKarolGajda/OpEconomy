@@ -1,5 +1,7 @@
 package me.opkarol.opeconomy.economy;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -13,6 +15,10 @@ public class Database {
 
     public static void setMoneyMap(HashMap<UUID, Integer> map1){
         moneyMap = map1;
+    }
+
+    public static UUID @NotNull [] getUUIDs(){
+        return moneyMap.keySet().toArray(new UUID[0]);
     }
 
     private static HashMap<UUID, Integer> moneyMap = new HashMap<>();

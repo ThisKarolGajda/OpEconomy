@@ -1,9 +1,6 @@
 package me.opkarol.opeconomy;
 
-import me.opkarol.opeconomy.commands.MoneyExecutor;
-import me.opkarol.opeconomy.commands.PayExecutor;
-import me.opkarol.opeconomy.commands.RedeemExecutor;
-import me.opkarol.opeconomy.commands.ReloadExecutor;
+import me.opkarol.opeconomy.commands.*;
 import me.opkarol.opeconomy.economy.Database;
 import me.opkarol.opeconomy.events.JoinEvent;
 import me.opkarol.opeconomy.utils.ColorUtils;
@@ -23,6 +20,7 @@ public class PluginController {
 
     public void onPluginStart() {
         loadConfigurationFile();
+        me.opkarol.opeconomy.balanceTop.Database.loadMap();
         registerCommands();
         registerEvents();
     }
@@ -64,6 +62,16 @@ public class PluginController {
         RedeemExecutor.setInfoMessage(getMessageFromConfig("Redeem.infoMessage"));
         RedeemExecutor.setCodeLength(getValueFromConfig("Redeem.codeLength"));
         RedeemExecutor.setRemoveAdditional((Boolean) getFromConfig("Redeem.removeAdditional"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageEndEnabled((Boolean) getFromConfig("BalanceTop.pageEnd.enabled"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageEndHoverMessage(getMessageFromConfig("BalanceTop.pageEnd.hoverMessage"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageEndNextPage(getMessageFromConfig("BalanceTop.pageEnd.nextPage"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageEndPreviousPage(getMessageFromConfig("BalanceTop.pageEnd.previousPage"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageMiddle(getMessageFromConfig("BalanceTop.pageMiddle"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageFront(getMessageFromConfig("BalanceTop.pageFront"));
+        me.opkarol.opeconomy.balanceTop.Database.setPageSize(getValueFromConfig("BalanceTop.pageSize"));
+        BalTopExecutor.setDontHavePermission(getMessageFromConfig("BalanceTop.Executor.dontHavePermission"));
+        BalTopExecutor.setBadUsage(getMessageFromConfig("BalanceTop.Executor.badUsage"));
+        BalTopExecutor.setLastArgumentNotNumber(getMessageFromConfig("BalanceTop.Executor.lastArgumentNotNumber"));
     }
 
     public void registerEvents() {
@@ -76,6 +84,7 @@ public class PluginController {
         Objects.requireNonNull(economy.getCommand("pay")).setExecutor(new PayExecutor());
         Objects.requireNonNull(economy.getCommand("opreload")).setExecutor(new ReloadExecutor());
         Objects.requireNonNull(economy.getCommand("redeem")).setExecutor(new RedeemExecutor());
+        Objects.requireNonNull(economy.getCommand("balancetop")).setExecutor(new BalTopExecutor());
     }
 
     public String getMessageFromConfig(String path) {

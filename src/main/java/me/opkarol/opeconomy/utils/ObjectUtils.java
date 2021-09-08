@@ -61,4 +61,17 @@ public class ObjectUtils {
         setCopyClickEvent(textComponent, toCopy);
         setHoverEventEnum(textComponent, type);
     }
+
+    private static void setHoverEvent(TextComponent textComponent, String hoverText){
+        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()));
+    }
+
+    private static void setRunCommandEvent(TextComponent textComponent, String command){
+        textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+    }
+
+    public static void setFullRunCommandEvent(TextComponent textComponent, String command, String hover){
+        setHoverEvent(textComponent, hover);
+        setRunCommandEvent(textComponent, command);
+    }
 }

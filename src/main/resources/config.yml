@@ -40,6 +40,23 @@ Reload:
   dontHavePermission: "&cYou don't have permission to use this command."
   successAction: "&7OpEconomy reloaded!"
 
+BalanceTop:
+  # This number represents how many players would show in one page
+  pageSize: 10
+  pageFront: "&fDownloading money of &7%all_players%&f players, please wait. \n&7Richest players: &7(%current_date%) \n&e--- &6Balance Top &e- &6Page %current_page% &e---\n"
+  pageMiddle: "%player_number% %player_nick%, %player_money%%currency%\n"
+  pageEnd:
+    # This function adds ability to click on a text which moves you to previous / next page
+    enabled: true
+    nextPage: "&7[&f&lNext Page&7] "
+    previousPage: "&7[&f&lPrevious Page&7] "
+    # HoverMessage will show when cursor is in text area
+    hoverMessage: "Click to go to the page!"
+  Executor:
+    dontHavePermission: "&cYou don't have permission to use this command."
+    badUsage: "&7Use: &f&l/baltop {PAGE}!"
+    lastArgumentNotNumber: "&cLast argument isn't a valid number!"
+
 Redeem:
   # Too small code can be easy to guess (Best: 12, Minimum: 1, Recommended: 8 or 6)
   codeLength: 8
