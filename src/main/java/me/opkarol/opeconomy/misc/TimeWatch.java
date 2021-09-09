@@ -1,21 +1,24 @@
 package me.opkarol.opeconomy.misc;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.TimeUnit;
 
 public class TimeWatch {
     long starts;
 
-    public static TimeWatch start() {
+    @Contract(" -> new")
+    public static @NotNull TimeWatch start() {
         return new TimeWatch();
     }
 
-    private TimeWatch() {
+    public TimeWatch() {
         reset();
     }
 
-    public TimeWatch reset() {
+    public void reset() {
         starts = System.currentTimeMillis();
-        return this;
     }
 
     public long time() {
@@ -23,7 +26,7 @@ public class TimeWatch {
         return ends - starts;
     }
 
-    public long time(TimeUnit unit) {
+    public long time(@NotNull TimeUnit unit) {
         return unit.convert(time(), TimeUnit.MILLISECONDS);
     }
 }

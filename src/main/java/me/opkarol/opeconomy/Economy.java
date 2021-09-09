@@ -1,11 +1,13 @@
 package me.opkarol.opeconomy;
 
+import me.opkarol.opeconomy.api.OpEconomyApi;
 import me.opkarol.opeconomy.economy.DatabaseLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Economy extends JavaPlugin {
     private static Economy economy;
     private static PluginController pluginController;
+    private static OpEconomyApi opEconomyApi;
 
     public static Economy getEconomy() {
         return economy;
@@ -15,12 +17,25 @@ public final class Economy extends JavaPlugin {
         return pluginController;
     }
 
+    public static OpEconomyApi getAPI(){
+        return opEconomyApi;
+    }
+
+    @Override
+    public void onLoad(){
+        economy = this;
+        opEconomyApi = new OpEconomyApi();
+
+    }
+
     @Override
     public void onEnable() {
-        economy = this;
-        pluginController = new PluginController(getEconomy());
         DatabaseLoader.onStart();
+        pluginController = new PluginController(getEconomy());
+        pluginController.checkUpdates();
+        pluginController.enableMetrics();
         me.opkarol.opeconomy.redeem.DatabaseLoader.onStart();
+
     }
 
     @Override

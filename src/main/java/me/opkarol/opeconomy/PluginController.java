@@ -3,18 +3,30 @@ package me.opkarol.opeconomy;
 import me.opkarol.opeconomy.commands.*;
 import me.opkarol.opeconomy.economy.Database;
 import me.opkarol.opeconomy.events.JoinEvent;
+import me.opkarol.opeconomy.misc.Metrics;
+import me.opkarol.opeconomy.misc.OpEconomyExpansion;
+import me.opkarol.opeconomy.misc.UpdateChecker;
 import me.opkarol.opeconomy.utils.ColorUtils;
 import me.opkarol.opeconomy.utils.TransactionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.Objects;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 public class PluginController {
     Economy economy;
 
     public PluginController(Economy economy1) {
         economy = economy1;
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
+            economy.getLogger().warning("PlaceholderAPI not found! Disabling plugin, please install it to use OpEconomy.");
+            Bukkit.getPluginManager().disablePlugin(economy);
+        } else {
+            new OpEconomyExpansion().register();
+            economy.getLogger().info("Player Expansion enabled.");
+        }
         onPluginStart();
     }
 
@@ -28,7 +40,6 @@ public class PluginController {
     public void loadConfigurationFile() {
         economy.saveDefaultConfig();
         economy.reloadConfig();
-        Database.setDefaultMoney(getValueFromConfig("Economy.Database.defaultMoney"));
         TransactionUtils.setNotEnoughMoney(getMessageFromConfig("Economy.TransactionUtils.notEnoughMoney"));
         TransactionUtils.setGetMoney(getMessageFromConfig("Economy.TransactionUtils.getMoneyMessage"));
         TransactionUtils.setReceiverDoesntExists(getMessageFromConfig("Economy.TransactionUtils.receiverDoesntExists"));
@@ -95,6 +106,31 @@ public class PluginController {
         return economy.getConfig().getInt(path);
     }
 
-    public Object getFromConfig(String path) {return economy.getConfig().get(path); }
+    public Object getFromConfig(String path) {
+        return economy.getConfig().get(path); }
 
+    public void enableMetrics(){
+        int pluginId = 12735;
+        Metrics metrics = new Metrics(Economy.getEconomy(), pluginId);
+        metrics.addCustomChart(new Metrics.SingleLineChart("money", () -> {
+            int money = 0;
+            for (UUID object : Database.getMoneyMap().keySet()){
+                money = money + Database.getMoneyFromUUID(object);
+            }
+            return money;
+        }));
+    }
+
+    public void checkUpdates(){
+        Logger logger = Economy.getEconomy().getLogger();
+
+        new UpdateChecker(Economy.getEconomy(), 95674).getVersion(version -> {
+            String versionString = Economy.getEconomy().getDescription().getVersion();
+            if (versionString.equalsIgnoreCase(version)) {
+                logger.info("There is not a new update available. Current version: " + versionString);
+            } else {
+                logger.info("There is a new update available. Current version: " + versionString + ", New version: " + version);
+            }
+        });
+    }
 }

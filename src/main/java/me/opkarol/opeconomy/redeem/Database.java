@@ -58,6 +58,7 @@ public class Database extends me.opkarol.opeconomy.economy.Database {
 
     public static boolean hasPlayerUsedCode(String code, @NotNull CommandSender player){
         Redeem redeem = map.get(code);
+        if (redeem == null) return false;
         AtomicBoolean has = new AtomicBoolean(false);
         redeem.getUsed().forEach(player1 -> {if (player1==player) has.set(true);});
         return has.get();

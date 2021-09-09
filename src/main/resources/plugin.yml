@@ -4,6 +4,8 @@ main: me.opkarol.opeconomy.Economy
 api-version: 1.17
 load: STARTUP
 
+depend: [PlaceholderAPI]
+
 commands:
   money:
     description: To check money of yourself, others or manage other's bank accounts

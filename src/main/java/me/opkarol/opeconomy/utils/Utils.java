@@ -1,7 +1,9 @@
 package me.opkarol.opeconomy.utils;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +28,8 @@ public class Utils {
     }
 
     public static boolean returnMessageToSender(@NotNull CommandSender sender, String message){
-        sender.sendMessage(message);
+        if (sender instanceof Player) sender.sendMessage(PlaceholderAPI.setPlaceholders((Player) sender, message));
+        else sender.sendMessage(message);
         return true;
     }
 

@@ -1,7 +1,9 @@
 package me.opkarol.opeconomy.commands;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.opkarol.opeconomy.utils.TransactionUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,21 +29,22 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
 
         if (args.length == 0 && sender instanceof Player){
             if (!sender.hasPermission("opeconomy.money.command.check") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
-            return returnMessageToSender(sender,getYourselfMoneyMessage(sender));
+            return returnMessageToSender(sender, PlaceholderAPI.setPlaceholders((Player) sender, getYourselfMoneyMessage(sender)));
         } else if (args.length == 0) return false;
 
-        Player target = Bukkit.getPlayer(args[0]);
+        OfflinePlayer target = Bukkit.getPlayer(args[0]);
         UUID uuid;
         if (target == null) {
             uuid = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
+            target = Bukkit.getOfflinePlayer(uuid);
         } else uuid = target.getUniqueId();
 
         if (args.length == 1){
             if (!sender.hasPermission("opeconomy.money.command.check.others") && !sender.isOp()) return returnMessageToSender(sender, dontHavePermission);
 
-            if (target == sender) sender.sendMessage(getYourselfMoneyMessage(sender));
-            else if (isPlayerAccountExists(uuid)) sender.sendMessage(getMoneyMessage(args[0], getMoneyFromUUID(uuid)));
-            else sender.sendMessage(targetDontExists);
+            if (target == sender) return returnMessageToSender(sender, getYourselfMoneyMessage(sender));
+            else if (isPlayerAccountExists(uuid)) return returnMessageToSender(sender, getMoneyMessage(args[0], getMoneyFromUUID(uuid)));
+            else returnMessageToSender(sender, targetDontExists);
 
             return true;
         }

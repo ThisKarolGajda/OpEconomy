@@ -39,7 +39,6 @@ public class BalTopExecutor implements CommandExecutor {
             sender.spigot().sendMessage(Database.getComponentFromPage(amount));
             return true;
         }
-        sender.sendMessage(badUsage);
-        return false;
+        return returnMessageToSender(sender, badUsage);
     }
 }

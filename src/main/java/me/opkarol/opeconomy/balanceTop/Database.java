@@ -45,6 +45,17 @@ public class Database {
         }.runTaskLaterAsynchronously(Economy.getEconomy(), 0);
     }
 
+    public static @Nullable String getPlayerNameByPosition(int position){
+        int size = integerHashMap.size();
+        if (position >= size) return null;
+        int number = size - position;
+        return String.valueOf(integerHashMap.keySet().toArray()[number]);
+    }
+
+    public static int getPlayerPosition(String name){
+        return 0;
+    }
+
     public static void loadMap(){
         refreshMap();
         new BukkitRunnable() {

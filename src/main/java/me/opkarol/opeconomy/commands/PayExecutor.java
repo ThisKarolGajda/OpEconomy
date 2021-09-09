@@ -1,5 +1,6 @@
 package me.opkarol.opeconomy.commands;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.opkarol.opeconomy.utils.ObjectUtils;
 import me.opkarol.opeconomy.utils.TransactionUtils;
 import org.bukkit.command.Command;
@@ -54,8 +55,8 @@ public class PayExecutor extends TransactionUtils implements CommandExecutor {
             removePlayerMoney(((Player) sender).getUniqueId(), amount);
             addPlayerMoney(uuid, amount);
 
-            sender.sendMessage(gaveMoney.replace("%money_receiver_name%", args[0]).replace("%money_sent_amount%", amountString).replace("%currency%", getCurrency()));
-            if (player.isOnline()) player.sendMessage(receivedMoney.replace("%money_sent_amount%", amountString).replace("%money_sender_name%", sender.getName()).replace("%currency%", getCurrency()));
+            sender.sendMessage(PlaceholderAPI.setPlaceholders((Player) sender, gaveMoney.replace("%money_receiver_name%", args[0]).replace("%money_sent_amount%", amountString).replace("%currency%", getCurrency())));
+            if (player.isOnline()) return returnMessageToSender(player, receivedMoney.replace("%money_sent_amount%", amountString).replace("%money_sender_name%", sender.getName()).replace("%currency%", getCurrency()));
 
             return true;
         }
