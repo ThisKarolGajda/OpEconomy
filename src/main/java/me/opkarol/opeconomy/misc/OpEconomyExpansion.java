@@ -50,6 +50,10 @@ public class OpEconomyExpansion extends PlaceholderExpansion{
             return me.opkarol.opeconomy.balanceTop.Database.getPlayerNameByPosition(number);
         }
 
+        if (params.startsWith("baltop_player_position")){
+            return String.valueOf(me.opkarol.opeconomy.balanceTop.Database.getPlayerPosition(player.getName()));
+        }
+
         if (params.startsWith("baltop_player_position_")){
             final String playerName = params.substring(23);
             return String.valueOf(me.opkarol.opeconomy.balanceTop.Database.getPlayerPosition(playerName));

@@ -3,6 +3,7 @@ package me.opkarol.opeconomy.commands;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.opkarol.opeconomy.utils.ObjectUtils;
 import me.opkarol.opeconomy.utils.TransactionUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +33,8 @@ public class PayExecutor extends TransactionUtils implements CommandExecutor {
 
         if (args.length == 2){
             UUID uuid = ObjectUtils.getUUIDFromString(args[0]);
-            Player player = getPlayerFromUUID(uuid);
+
+            OfflinePlayer player = getPlayerFromUUID(uuid);
 
             if (player == sender) return returnMessageToSender(sender, cantPayYourself);
 
@@ -55,10 +57,11 @@ public class PayExecutor extends TransactionUtils implements CommandExecutor {
             removePlayerMoney(((Player) sender).getUniqueId(), amount);
             addPlayerMoney(uuid, amount);
 
-            sender.sendMessage(PlaceholderAPI.setPlaceholders((Player) sender, gaveMoney.replace("%money_receiver_name%", args[0]).replace("%money_sent_amount%", amountString).replace("%currency%", getCurrency())));
-            if (player.isOnline()) return returnMessageToSender(player, receivedMoney.replace("%money_sent_amount%", amountString).replace("%money_sender_name%", sender.getName()).replace("%currency%", getCurrency()));
-
-            return true;
+            try {
+                if (player.isOnline())
+                    return returnMessageToSender((CommandSender) player, receivedMoney.replace("%money_sent_amount%", amountString).replace("%money_sender_name%", sender.getName()).replace("%currency%", getCurrency()));
+            } catch (Exception ignore) {}
+            return returnMessageToSender(sender, PlaceholderAPI.setPlaceholders((Player) sender, gaveMoney.replace("%money_receiver_name%", args[0]).replace("%money_sent_amount%", amountString).replace("%currency%", getCurrency())));
         }
 
         return returnMessageToSender(sender, badUsage);

@@ -53,6 +53,17 @@ public class Database {
     }
 
     public static int getPlayerPosition(String name){
+        for (String string : integerHashMap.keySet()){
+            if (string.equals(name)){
+                int i = integerHashMap.size();
+                for (int integer : integerHashMap.values()){
+                    if (integer == integerHashMap.get(string)){
+                        return i;
+                    }
+                    i--;
+                }
+            }
+        }
         return 0;
     }
 
