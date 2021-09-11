@@ -32,8 +32,6 @@ public final class Economy extends JavaPlugin {
     public void onEnable() {
         DatabaseLoader.onStart();
         pluginController = new PluginController(getEconomy());
-        pluginController.checkUpdates();
-        pluginController.enableMetrics();
         me.opkarol.opeconomy.redeem.DatabaseLoader.onStart();
 
     }

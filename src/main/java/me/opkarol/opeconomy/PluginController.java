@@ -1,16 +1,23 @@
 package me.opkarol.opeconomy;
 
+import com.tchristofferson.configupdater.ConfigUpdater;
 import me.opkarol.opeconomy.commands.*;
 import me.opkarol.opeconomy.economy.Database;
+import me.opkarol.opeconomy.events.ClickEvent;
+import me.opkarol.opeconomy.events.DeathEvent;
 import me.opkarol.opeconomy.events.JoinEvent;
 import me.opkarol.opeconomy.misc.Metrics;
 import me.opkarol.opeconomy.misc.OpEconomyExpansion;
 import me.opkarol.opeconomy.misc.UpdateChecker;
+import me.opkarol.opeconomy.notes.NoteItem;
 import me.opkarol.opeconomy.utils.ColorUtils;
 import me.opkarol.opeconomy.utils.TransactionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -31,10 +38,13 @@ public class PluginController {
     }
 
     public void onPluginStart() {
+        updateConfig();
         loadConfigurationFile();
         me.opkarol.opeconomy.balanceTop.Database.loadMap();
+        checkUpdates();
         registerCommands();
         registerEvents();
+        enableMetrics();
     }
 
     public void loadConfigurationFile() {
@@ -83,11 +93,32 @@ public class PluginController {
         BalTopExecutor.setDontHavePermission(getMessageFromConfig("BalanceTop.Executor.dontHavePermission"));
         BalTopExecutor.setBadUsage(getMessageFromConfig("BalanceTop.Executor.badUsage"));
         BalTopExecutor.setLastArgumentNotNumber(getMessageFromConfig("BalanceTop.Executor.lastArgumentNotNumber"));
+        DeathEvent.setKillerGetsMoney((Boolean) getFromConfig("DeathSettings.killerGetsMoney"));
+        DeathEvent.setLostMoneyOnDeath((Double) getFromConfig("DeathSettings.lostMoneyOnDeath"));
+        DeathEvent.setLostPercentageOfMoneyOnDeath((Double) getFromConfig("DeathSettings.lostPercentageOfMoneyOnDeath"));
+        NoteItem.setDepositedMoney(getMessageFromConfig("Notes.messages.depositedMoney"));
+        NoteItem.setWithdrawnMoney(getMessageFromConfig("Notes.messages.withdrawnMoney"));
+        NoteItem.setBadUsage(getMessageFromConfig("Notes.messages.badUsage"));
+        NoteItem.setNotAvailableToConsole(getMessageFromConfig("Notes.messages.notAvailableToConsole"));
+        NoteItem.setLastArgumentNotNumber(getMessageFromConfig("Notes.messages.lastArgumentNotNumber"));
+        NoteItem.setDontHavePermission(getMessageFromConfig("Notes.messages.dontHavePermission"));
+        NoteItem.setMinimumNote((Double) getFromConfig("Notes.notesSettings.minimumNote"));
+        NoteItem.setMaximumNote((Double) getFromConfig("Notes.notesSettings.maximumNote"));
+        NoteItem.setDepositSound(getMessageFromConfig("Notes.sounds.depositSound"));
+        NoteItem.setWithdrawSound(getMessageFromConfig("Notes.sounds.withdrawSound"));
+        NoteItem.setName(getMessageFromConfig("Notes.notesItem.name"));
+        NoteItem.setLore((List<String>) getFromConfig("Notes.notesItem.lore"));
+        NoteItem.setMaterial(getMessageFromConfig("Notes.notesItem.material"));
+        NoteItem.setEnchanted((Boolean) getFromConfig("Notes.notesItem.enchanted"));
+        NoteItem.setHidden((Boolean) getFromConfig("Notes.notesItem.hidden"));
+
     }
 
     public void registerEvents() {
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new JoinEvent(), economy);
+        manager.registerEvents(new DeathEvent(), economy);
+        manager.registerEvents(new ClickEvent(), economy);
     }
 
     public void registerCommands() {
@@ -96,6 +127,7 @@ public class PluginController {
         Objects.requireNonNull(economy.getCommand("opreload")).setExecutor(new ReloadExecutor());
         Objects.requireNonNull(economy.getCommand("redeem")).setExecutor(new RedeemExecutor());
         Objects.requireNonNull(economy.getCommand("balancetop")).setExecutor(new BalTopExecutor());
+        Objects.requireNonNull(economy.getCommand("moneynote")).setExecutor(new NoteExecutor());
     }
 
     public String getMessageFromConfig(String path) {
@@ -107,9 +139,10 @@ public class PluginController {
     }
 
     public Object getFromConfig(String path) {
-        return economy.getConfig().get(path); }
+        return economy.getConfig().get(path);
+    }
 
-    public void enableMetrics(){
+    public void enableMetrics() {
         int pluginId = 12735;
         Metrics metrics = new Metrics(Economy.getEconomy(), pluginId);
         metrics.addCustomChart(new Metrics.SingleLineChart("money", () -> {
@@ -121,7 +154,7 @@ public class PluginController {
         }));
     }
 
-    public void checkUpdates(){
+    public void checkUpdates() {
         Logger logger = Economy.getEconomy().getLogger();
 
         new UpdateChecker(Economy.getEconomy(), 95674).getVersion(version -> {
@@ -129,8 +162,32 @@ public class PluginController {
             if (versionString.equalsIgnoreCase(version)) {
                 logger.info("There is not a new update available. Current version: " + versionString);
             } else {
-                logger.info("There is a new update available. Current version: " + versionString + ", New version: " + version);
+                logger.warning("There is a new update available. Current version: " + versionString + ", New version: " + version + ". Download it now: https://www.spigotmc.org/resources/95674/");
             }
         });
+    }
+
+    public double checkConfigVersion() {
+        return (double) getFromConfig("version");
+    }
+
+    public void updateConfig() {
+        economy.saveDefaultConfig();
+        double version = 0.3;
+        if (version != checkConfigVersion() || checkConfigVersion() == 0) {
+
+            File configFile = new File(economy.getDataFolder(), "config.yml");
+
+            try {
+                economy.getConfig().set("version", version);
+                economy.saveConfig();
+                ConfigUpdater.update(economy, "config.yml", configFile, null);
+                economy.getLogger().warning("Configuration file was recreated with new objects and old values! Please check it out! Previous version was " + checkConfigVersion() + ", current version " + version);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            economy.reloadConfig();
+        }
     }
 }

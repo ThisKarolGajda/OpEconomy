@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class JoinEvent extends TransactionUtils implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
-    void onPlayerJoin(@NotNull PlayerJoinEvent event) {
+    void joinEvent(@NotNull PlayerJoinEvent event) {
         if (!isPlayerAccountExists(event.getPlayer().getUniqueId())) createNewBankAccount(event.getPlayer().getUniqueId());
     }
 }

@@ -20,3 +20,7 @@ commands:
       - baltop
       - moneytop
     description: Check leaderboard of all players money
+  moneynote:
+    description: Withdraw money to mnote
+    aliases:
+      - withdraw

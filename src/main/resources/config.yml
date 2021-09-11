@@ -58,7 +58,7 @@ BalanceTop:
     lastArgumentNotNumber: "&cLast argument isn't a valid number!"
 
 Redeem:
-  # Too small code can be easy to guess (Best: 12, Minimum: 1, Recommended: 8 or 6)
+  # Too small code can be easy to guess (Best: 10, Minimum: 1 (to even use codes), Recommended: 8 or 6)
   codeLength: 8
   # If this is enabled, it will remove additional code if it's too big or add to fill length requirement
   # Preferred to be enabled (true)
@@ -73,5 +73,46 @@ Redeem:
   removedCode: "&7Code has been removed."
   infoMessage: "&7Code: &f&l%redeem_code_name% \n&7Reward: &f&l%redeem_reward% \n&7Max Uses: &f&l%redeem_maxUses% \n&7Uses: &f&l%redeem_uses% \n&7Players: &f&l%redeem_players_name%"
 
+DeathSettings:
+  # IF YOU DON'T WANT TO HAVE ANY OF THESE SETTINGS SET THEM TO 0
+  # You can't have lostPercentageOfMoneyOnDeath turned on in this case or plugin will break
+  # Lost specific amount of money on death
+  # Change to 0 if you want to disable
+  lostMoneyOnDeath: 100.0
+  # You can't have lostMoneyOnDeath turned on in this case or plugin will break
+  # Lost specific percentage of money on death
+  # Change to 0 if you want to disable
+  lostPercentageOfMoneyOnDeath: 0.01
+  # Select 'true' if you want to killer getting money from killed player (recommended for RP servers)
+  # Select 'false' if you want to disable
+  killerGetsMoney: true
+
+Notes:
+  enabled: true
+  notesItem:
+    name: "&7MoneyNote &8(Right Click)"
+    lore:
+      - '&7Note of value %note_value%%opeconomy_currency%'
+      - '&7Signed by &7Imperial Bank of Server'
+    material: Paper
+    # If Enchanted is enabled, it will make item 'glow'
+    enchanted: true
+    # If Hidden is enabled, it will hide all item's attributes
+    hidden: true
+  sounds:
+    # List of sounds available is here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+    withdrawSound: 'ENTITY_COW_HURT'
+    depositSound: 'BLOCK_ANVIL_FALL'
+  notesSettings:
+    minimumNote: 5.0
+    maximumNote: 50000.0
+  messages:
+    dontHavePermission: "&cYou don't have permission to use this command."
+    lastArgumentNotNumber: "&cLast argument isn't a valid number!"
+    notAvailableToConsole: "&fThis command is unavailable to a Console."
+    badUsage: "&7Use: &f&l/withdraw {AMOUNT}!"
+    withdrawnMoney: "&c- %money_withdrawn%%opeconomy_currency%"
+    depositedMoney: "&a+ %money_deposited%%opeconomy_currency%"
+
 #Don't change this value unless YOU KNOW WHAT YOU ARE DOING
-version: 0.1
+version: 0.4

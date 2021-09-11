@@ -16,7 +16,7 @@ public class ColorUtils {
         return ChatColor.translateAlternateColorCodes('&', toFormat);
     }
 
-    @NotNull @TestOnly
+    @NotNull
     public static List<String> formatList(@NotNull List<String> lore) {
         List<String> Lore = new ArrayList<>();
         for (String line : lore) Lore.add(formatText(line));
