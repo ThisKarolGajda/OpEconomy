@@ -1,5 +1,6 @@
 package me.opkarol.opeconomy.commands;
 
+import me.opkarol.opeconomy.balanceTop.NameFetcher;
 import me.opkarol.opeconomy.redeem.CodeGenerator;
 import me.opkarol.opeconomy.redeem.Database;
 import me.opkarol.opeconomy.redeem.Redeem;
@@ -8,15 +9,18 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static me.opkarol.opeconomy.utils.ObjectUtils.*;
 import static me.opkarol.opeconomy.utils.Utils.*;
 
-public class RedeemExecutor extends Database implements CommandExecutor {
+public class RedeemExecutor extends Database implements CommandExecutor, TabCompleter {
     private static String dontHavePermission;
     private static String notAvailableToConsole;
     private static String validCodeEntered;
@@ -29,6 +33,19 @@ public class RedeemExecutor extends Database implements CommandExecutor {
     private static int codeLength;
     private static boolean removeAdditional;
 
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String alias, String @NotNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        switch (args.length){
+            case 1 -> results.addAll(Arrays.asList("info", "remove", "create", "<code>"));
+            case 2 -> results.add("<code> / Random");
+            case 3 -> results.add("<max uses>");
+            case 4 -> results.add("<reward>");
+        }
+
+        return results;
+    }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("opeconomy.command.redeem.use") && !sender.isOp())
@@ -89,7 +106,9 @@ public class RedeemExecutor extends Database implements CommandExecutor {
                 if (isntCodeExists(code)) return returnMessageToSender(sender, notValidCodeEntered);
 
                 Redeem redeem = getRedeemFromCode(code);
-                return returnMessageToSender(sender, infoMessage.replace("%redeem_code_name%", code).replace("%redeem_reward%", String.valueOf(redeem.getReward())).replace("%redeem_maxUses%", String.valueOf(redeem.getMaxUses())).replace("%redeem_uses%", String.valueOf(redeem.getUses())).replace("%redeem_players_name%", Arrays.toString(redeem.getUsed().toArray())));
+                ArrayList<String> playerNames = new ArrayList<>();
+                redeem.getUsed().forEach(uuid -> playerNames.add(NameFetcher.getName(uuid)));
+                return returnMessageToSender(sender, infoMessage.replace("%redeem_code_name%", code).replace("%redeem_reward%", String.valueOf(redeem.getReward())).replace("%redeem_maxUses%", String.valueOf(redeem.getMaxUses())).replace("%redeem_uses%", String.valueOf(redeem.getUses())).replace("%redeem_players_name%", Arrays.toString(playerNames.toArray())));
 
             }
         }

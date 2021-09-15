@@ -7,14 +7,18 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static me.opkarol.opeconomy.utils.Utils.*;
 
-public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
+public class MoneyExecutor extends TransactionUtils implements CommandExecutor, TabCompleter {
     private static String dontHavePermission;
     private static String moneyMessage;
     private static String yourselfMoneyMessage;
@@ -22,6 +26,19 @@ public class MoneyExecutor extends TransactionUtils implements CommandExecutor {
     private static String successfulAction;
     private static String badUsage;
     private static String targetDontExists;
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String alias, String @NotNull [] args) {
+        List<String> results = new ArrayList<>();
+
+        switch (args.length){
+            case 1 -> Bukkit.getOnlinePlayers().forEach(player -> results.add(player.getName()));
+            case 2 -> results.addAll(Arrays.asList("set", "remove", "add"));
+            case 3 -> results.add("<amount>");
+        }
+
+        return results;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

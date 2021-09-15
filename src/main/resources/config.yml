@@ -114,5 +114,23 @@ Notes:
     withdrawnMoney: "&c- %money_withdrawn%%opeconomy_currency%"
     depositedMoney: "&a+ %money_deposited%%opeconomy_currency%"
 
+TimeEqualsMoney:
+  # This allows you to reward yours players that they are spending time on your server
+  enabled: true
+  reward:
+    # Integer every is telling loop for how long one loop should have been
+    every: 60 # In seconds
+    # Integer length is telling every how many minute(s) we will get price
+    length: 10 # In minutes
+    price: 100
+  # Enabling this feature will display text in action bar and not in chat
+  useActionBar: true
+  message:
+    rewardMessage: "You got a %item_price% by being active on the server"
+  # This isn't recommended due to ability that can lower server's performance
+  # Turn on for own risk (No help will be granted until 'stable' version will patch it)
+  anti-afk-feature:
+    enabled: true
+
 #Don't change this value unless YOU KNOW WHAT YOU ARE DOING
-version: 0.4
+version: 0.5

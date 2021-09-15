@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Database extends me.opkarol.opeconomy.economy.Database {
@@ -46,9 +47,9 @@ public class Database extends me.opkarol.opeconomy.economy.Database {
         else {
             redeem.setUses(uses + 1);
 
-            List<Player> playerList = redeem.getUsed();
+            List<UUID> playerList = redeem.getUsed();
             if (playerList == null) playerList = new ArrayList<>();
-            playerList.add(player);
+            playerList.add(player.getUniqueId());
             redeem.setUsed(playerList);
 
             addPlayerMoney(ObjectUtils.getUUIDFromObject(player), redeem.getReward());
@@ -56,11 +57,12 @@ public class Database extends me.opkarol.opeconomy.economy.Database {
         }
     }
 
-    public static boolean hasPlayerUsedCode(String code, @NotNull CommandSender player){
+    public static boolean hasPlayerUsedCode(String code, @NotNull CommandSender playerSender){
         Redeem redeem = map.get(code);
         if (redeem == null) return false;
+        if (!(playerSender instanceof Player)) return true;
         AtomicBoolean has = new AtomicBoolean(false);
-        redeem.getUsed().forEach(player1 -> {if (player1==player) has.set(true);});
+        redeem.getUsed().forEach(player1 -> {if (player1 == ((Player) playerSender).getUniqueId()) has.set(true);});
         return has.get();
     }
 }

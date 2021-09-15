@@ -36,11 +36,10 @@ public class NoteItem {
     private static double minimumNote;
     private static double maximumNote;
 
-    public static ItemStack itemStack = new ItemStack(material != null ? (Material) Material.getMaterial(material) : Material.PAPER);
+    public static ItemStack itemStack = new ItemStack(Material.getMaterial(material) != null ? Objects.requireNonNull(Material.getMaterial(material)) : Material.PAPER);
     static ItemMeta meta = itemStack.getItemMeta();
 
     public static @NotNull ItemStack getNote(int value, Player player){
-
         assert meta != null;
         meta.setDisplayName(replaceHolders(name, value, player));
         List<String> loreIG = new ArrayList<>();

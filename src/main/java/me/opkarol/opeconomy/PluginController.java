@@ -8,6 +8,7 @@ import me.opkarol.opeconomy.events.DeathEvent;
 import me.opkarol.opeconomy.events.JoinEvent;
 import me.opkarol.opeconomy.misc.Metrics;
 import me.opkarol.opeconomy.misc.OpEconomyExpansion;
+import me.opkarol.opeconomy.misc.TimeEqualsMoney;
 import me.opkarol.opeconomy.misc.UpdateChecker;
 import me.opkarol.opeconomy.notes.NoteItem;
 import me.opkarol.opeconomy.utils.ColorUtils;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 public class PluginController {
@@ -42,8 +44,10 @@ public class PluginController {
         loadConfigurationFile();
         me.opkarol.opeconomy.balanceTop.Database.loadMap();
         checkUpdates();
-        registerCommands();
         registerEvents();
+        registerCommands();
+        registerTabCompleters();
+        TimeEqualsMoney.onServerStart();
         enableMetrics();
     }
 
@@ -111,7 +115,13 @@ public class PluginController {
         NoteItem.setMaterial(getMessageFromConfig("Notes.notesItem.material"));
         NoteItem.setEnchanted((Boolean) getFromConfig("Notes.notesItem.enchanted"));
         NoteItem.setHidden((Boolean) getFromConfig("Notes.notesItem.hidden"));
-
+        TimeEqualsMoney.setAntiAfkEnabled((Boolean) getFromConfig("TimeEqualsMoney.enabled"));
+        TimeEqualsMoney.setRewardTime((Integer) getFromConfig("TimeEqualsMoney.reward.every"));
+        TimeEqualsMoney.setEnabled((Boolean) getFromConfig("TimeEqualsMoney.enabled"));
+        TimeEqualsMoney.setRewardPrice((Integer) getFromConfig("TimeEqualsMoney.reward.price"));
+        TimeEqualsMoney.setRewardMessage((String) getFromConfig("TimeEqualsMoney.message.rewardMessage"));
+        TimeEqualsMoney.setUseActionBar((Boolean) getFromConfig("TimeEqualsMoney.useActionBar"));
+        TimeEqualsMoney.setLength((Integer) getFromConfig("TimeEqualsMoney.reward.length"));
     }
 
     public void registerEvents() {
@@ -130,6 +140,15 @@ public class PluginController {
         Objects.requireNonNull(economy.getCommand("moneynote")).setExecutor(new NoteExecutor());
     }
 
+    public void registerTabCompleters(){
+        Objects.requireNonNull(economy.getCommand("money")).setTabCompleter(new MoneyExecutor());
+        Objects.requireNonNull(economy.getCommand("pay")).setTabCompleter(new PayExecutor());
+        Objects.requireNonNull(economy.getCommand("opreload")).setTabCompleter(new ReloadExecutor());
+        Objects.requireNonNull(economy.getCommand("redeem")).setTabCompleter(new RedeemExecutor());
+        Objects.requireNonNull(economy.getCommand("balancetop")).setTabCompleter(new BalTopExecutor());
+        Objects.requireNonNull(economy.getCommand("moneynote")).setTabCompleter(new NoteExecutor());
+    }
+
     public String getMessageFromConfig(String path) {
         return ColorUtils.formatText(economy.getConfig().getString(path));
     }
@@ -145,20 +164,24 @@ public class PluginController {
     public void enableMetrics() {
         int pluginId = 12735;
         Metrics metrics = new Metrics(Economy.getEconomy(), pluginId);
-        metrics.addCustomChart(new Metrics.SingleLineChart("money", () -> {
-            int money = 0;
-            for (UUID object : Database.getMoneyMap().keySet()){
-                money = money + Database.getMoneyFromUUID(object);
+        metrics.addCustomChart(new Metrics.SingleLineChart("money", new Callable<>() {
+            @Override
+            public Integer call() throws Exception {
+                int money = 0;
+                for (UUID object : Database.getMoneyMap().keySet()) {
+                    money = money + Database.getMoneyFromUUID(object);
+                }
+                return money;
             }
-            return money;
-        }));
+        }
+        ));
     }
 
     public void checkUpdates() {
-        Logger logger = Economy.getEconomy().getLogger();
+        Logger logger = economy.getLogger();
 
-        new UpdateChecker(Economy.getEconomy(), 95674).getVersion(version -> {
-            String versionString = Economy.getEconomy().getDescription().getVersion();
+        new UpdateChecker(economy, 95674).getVersion(version -> {
+            String versionString = economy.getDescription().getVersion();
             if (versionString.equalsIgnoreCase(version)) {
                 logger.info("There is not a new update available. Current version: " + versionString);
             } else {
@@ -171,23 +194,26 @@ public class PluginController {
         return (double) getFromConfig("version");
     }
 
+    public void instantConfigUpdate(){
+        File configFile = new File(economy.getDataFolder(), "config.yml");
+
+        try {
+            economy.saveConfig();
+            ConfigUpdater.update(economy, "config.yml", configFile, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        economy.reloadConfig();
+    }
+
     public void updateConfig() {
         economy.saveDefaultConfig();
-        double version = 0.3;
+        double version = 0.5;
         if (version != checkConfigVersion() || checkConfigVersion() == 0) {
-
-            File configFile = new File(economy.getDataFolder(), "config.yml");
-
-            try {
-                economy.getConfig().set("version", version);
-                economy.saveConfig();
-                ConfigUpdater.update(economy, "config.yml", configFile, null);
-                economy.getLogger().warning("Configuration file was recreated with new objects and old values! Please check it out! Previous version was " + checkConfigVersion() + ", current version " + version);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            economy.reloadConfig();
+            economy.getConfig().set("version", version);
+            instantConfigUpdate();
+            economy.getLogger().warning("Configuration file was recreated with new objects and old values! Please check it out! Previous version was " + checkConfigVersion());
         }
     }
 }

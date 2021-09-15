@@ -5,12 +5,13 @@ import org.bukkit.entity.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Redeem implements Serializable {
     private final int maxUses;
     private int uses;
     private final int reward;
-    private List<Player> used;
+    private List<UUID> used;
 
     public Redeem(int maxUses2, int uses2, int reward2){
         maxUses = maxUses2;
@@ -19,7 +20,7 @@ public class Redeem implements Serializable {
         used = new ArrayList<>();
     }
 
-    public void setUsed(List<Player> used) {
+    public void setUsed(List<UUID> used) {
         this.used = used;
     }
 
@@ -39,7 +40,7 @@ public class Redeem implements Serializable {
         return uses;
     }
 
-    public List<Player> getUsed() {
+    public List<UUID> getUsed() {
         return used;
     }
 }
