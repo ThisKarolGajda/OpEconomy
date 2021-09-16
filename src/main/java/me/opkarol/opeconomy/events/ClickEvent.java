@@ -27,7 +27,6 @@ public class ClickEvent extends NoteItem implements Listener {
         int foundValue;
         if(tagContainer.hasCustomTag(getNamespacedKey() , ItemTagType.INTEGER)) {
             foundValue = tagContainer.getCustomTag(getNamespacedKey(), ItemTagType.INTEGER);
-            Bukkit.broadcastMessage((String.valueOf(foundValue)));
         } else return;
 
         Player player = event.getPlayer();
