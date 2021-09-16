@@ -1,5 +1,6 @@
 package me.opkarol.opeconomy.events;
 
+import me.opkarol.opeconomy.Economy;
 import me.opkarol.opeconomy.misc.TimeEqualsMoney;
 import me.opkarol.opeconomy.utils.TransactionUtils;
 import org.bukkit.event.EventHandler;
@@ -14,5 +15,7 @@ public class JoinEvent extends TransactionUtils implements Listener {
     void joinEvent(@NotNull PlayerJoinEvent event) {
         if (!isPlayerAccountExists(event.getPlayer().getUniqueId())) createNewBankAccount(event.getPlayer().getUniqueId());
         TimeEqualsMoney.safeAddUUIDToMap(event.getPlayer().getUniqueId());
+        Economy.getPluginController().checkUpdates();
+        if (event.getPlayer().isOp()) event.getPlayer().sendMessage("[OpEconomy] " + Economy.getPluginController().getMessage());
     }
 }

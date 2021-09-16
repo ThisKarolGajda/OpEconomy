@@ -10,7 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.inventory.meta.tags.ItemTagType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ public class NoteItem {
     private static String withdrawnMoney;
     private static String depositedMoney;
     private static String name;
+    private static String tooBigOrSmallAmount;
     private static List<String> lore;
     private static String material;
     private static boolean enchanted;
@@ -48,15 +49,28 @@ public class NoteItem {
         if (enchanted) meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
         if (hidden) { meta.addItemFlags(HIDE_ATTRIBUTES); meta.addItemFlags(HIDE_ENCHANTS);}
 
-        meta.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("opeconomy-money-note-key-dont-leak-pls")), PersistentDataType.INTEGER, value);
+        meta.getCustomTagContainer().setCustomTag(key, ItemTagType.INTEGER, value);
 
         itemStack.setItemMeta(meta);
 
         return itemStack;
     }
 
+    private static final NamespacedKey key = new NamespacedKey(Economy.getEconomy(), "opeconomy-money-note-key-dont-leak-pls");
+    public static NamespacedKey getNamespacedKey(){
+        return key;
+    }
+
     private static @NotNull String replaceHolders(@NotNull String string, int value, Player player){
         return PlaceholderAPI.setPlaceholders(player, string.replace("%note_value%", String.valueOf(value)));
+    }
+
+    public static @NotNull String getTooBigOrSmallAmount() {
+        return tooBigOrSmallAmount.replace("%opeconomy_currency%", Economy.getAPI().getActiveCurrency());
+    }
+
+    public static void setTooBigOrSmallAmount(String tooBigOrSmallAmount) {
+        NoteItem.tooBigOrSmallAmount = tooBigOrSmallAmount;
     }
 
     public void playSound(@NotNull Player player, Sound sound){

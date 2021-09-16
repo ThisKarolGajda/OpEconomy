@@ -46,7 +46,7 @@ public class NoteExecutor extends NoteItem implements CommandExecutor, TabComple
 
         if (amount < 0) return returnMessageToSender(sender, getLastArgumentNotNumber());
         Player player = (Player) sender;
-        if (amount > getMaximumNote() || amount < getMinimumNote()) return returnMessageToSender(sender, getLastArgumentNotNumber());
+        if (amount > getMaximumNote() || amount < getMinimumNote()) return returnMessageToSender(sender, getTooBigOrSmallAmount().replace("%tried_withdraw_amount%", String.valueOf(amount)));
 
         if (Database.getMoneyFromUUID(player.getUniqueId()) >= amount){
             player.getInventory().addItem(NoteItem.getNote(amount, player));

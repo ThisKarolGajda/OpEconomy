@@ -15,6 +15,7 @@ import me.opkarol.opeconomy.utils.ColorUtils;
 import me.opkarol.opeconomy.utils.TransactionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.logging.Logger;
 
 public class PluginController {
     Economy economy;
@@ -43,12 +43,19 @@ public class PluginController {
         updateConfig();
         loadConfigurationFile();
         me.opkarol.opeconomy.balanceTop.Database.loadMap();
-        checkUpdates();
         registerEvents();
         registerCommands();
         registerTabCompleters();
         TimeEqualsMoney.onServerStart();
         enableMetrics();
+        checkUpdates();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                economy.getLogger().warning(getMessage());
+            }
+        }.runTaskLater(economy, 100);
+
     }
 
     public void loadConfigurationFile() {
@@ -115,6 +122,7 @@ public class PluginController {
         NoteItem.setMaterial(getMessageFromConfig("Notes.notesItem.material"));
         NoteItem.setEnchanted((Boolean) getFromConfig("Notes.notesItem.enchanted"));
         NoteItem.setHidden((Boolean) getFromConfig("Notes.notesItem.hidden"));
+        NoteItem.setTooBigOrSmallAmount(getMessageFromConfig("Notes.messages.tooBigOrSmallAmount"));
         TimeEqualsMoney.setAntiAfkEnabled((Boolean) getFromConfig("TimeEqualsMoney.enabled"));
         TimeEqualsMoney.setRewardTime((Integer) getFromConfig("TimeEqualsMoney.reward.every"));
         TimeEqualsMoney.setEnabled((Boolean) getFromConfig("TimeEqualsMoney.enabled"));
@@ -176,16 +184,16 @@ public class PluginController {
         }
         ));
     }
+    private String message = "Cannot look for updates.";
 
     public void checkUpdates() {
-        Logger logger = economy.getLogger();
+        String versionString = economy.getDescription().getVersion();
 
         new UpdateChecker(economy, 95674).getVersion(version -> {
-            String versionString = economy.getDescription().getVersion();
             if (versionString.equalsIgnoreCase(version)) {
-                logger.info("There is not a new update available. Current version: " + versionString);
+                setMessage("There is not a new update available. Current version: " + versionString);
             } else {
-                logger.warning("There is a new update available. Current version: " + versionString + ", New version: " + version + ". Download it now: https://www.spigotmc.org/resources/95674/");
+                setMessage("There is a new update available. Current version: " + versionString + ", New version: " + version + ". Download it now: https://www.spigotmc.org/resources/95674/");
             }
         });
     }
@@ -209,11 +217,19 @@ public class PluginController {
 
     public void updateConfig() {
         economy.saveDefaultConfig();
-        double version = 0.5;
+        double version = 0.51;
         if (version != checkConfigVersion() || checkConfigVersion() == 0) {
             economy.getConfig().set("version", version);
             instantConfigUpdate();
             economy.getLogger().warning("Configuration file was recreated with new objects and old values! Please check it out! Previous version was " + checkConfigVersion());
         }
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

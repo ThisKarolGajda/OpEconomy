@@ -113,6 +113,7 @@ Notes:
     badUsage: "&7Use: &f&l/withdraw {AMOUNT}!"
     withdrawnMoney: "&c- %money_withdrawn%%opeconomy_currency%"
     depositedMoney: "&a+ %money_deposited%%opeconomy_currency%"
+    tooBigOrSmallAmount: "&cYou can withdraw from 5%opeconomy_currency% up to 50000%opeconomy_currency%.\nYou can't withdraw %tried_withdraw_amount%%opeconomy_currency%!"
 
 TimeEqualsMoney:
   # This allows you to reward yours players that they are spending time on your server
@@ -133,4 +134,4 @@ TimeEqualsMoney:
     enabled: true
 
 #Don't change this value unless YOU KNOW WHAT YOU ARE DOING
-version: 0.5
+version: 0.51
