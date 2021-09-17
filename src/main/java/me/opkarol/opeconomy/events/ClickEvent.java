@@ -21,7 +21,9 @@ public class ClickEvent extends NoteItem implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void clickEvent(@NotNull PlayerInteractEvent event){
         ItemStack item = event.getPlayer().getInventory().getItemInHand();
+        if (!item.getType().equals(itemStack.getType())) return;
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
 
         CustomItemTagContainer tagContainer = meta.getCustomTagContainer();
         int foundValue;
